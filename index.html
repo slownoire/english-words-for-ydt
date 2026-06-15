@@ -2,7 +2,8 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>YDT Master - 200 Kelime</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YDT Vocabulary Master</title>
     <style>
         body { margin: 0; background-color: #0d0d11; color: #fff; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
         .card { width: 320px; height: 400px; perspective: 1000px; cursor: pointer; }
@@ -149,122 +150,4 @@
     </script>
 </body>
 </html>
-            <!-- KART ÖN YÜZÜ -->
-            <div class="card-side card-front">
-                <div class="word-type" id="wordType">ONLINE LEVEL</div>
-                <div class="word-text-container">
-                    <div class="word-text" id="englishWord">Loading...</div>
-                </div>
-                <div class="tip">Sıradaki kelimeye geçmek için aşağıdaki butona basın.</div>
-            </div>
-            
-            <!-- KART ARKA YÜZÜ -->
-            <div class="card-side card-back">
-                <div class="word-type" style="color: #9f7aea;">Meaning & Example</div>
-                <div class="word-text-container">
-                    <div class="meaning-text" id="turkishMeaning">Translating...</div>
-                    <div class="sentence-box">
-                        <div class="eng-sentence" id="sampleEng">...</div>
-                        <div class="tr-sentence" id="sampleTr">...</div>
-                    </div>
-                </div>
-                <div class="tip">Sıradaki kelimeye geçmek için aşağıdaki butona basın.</div>
-            </div>
-        </div>
-        
-        <button class="btn-next" onclick="nextWord(event)">Sıradaki Kelime ➔</button>
-    </div>
 
-    <script>
-        const card = document.getElementById('card');
-        let currentWord = "";
-
-        function flipCard() { 
-            card.classList.toggle('flipped'); 
-        }
-
-        function nextWord(event) {
-            event.stopPropagation();
-            if (card.classList.contains('flipped')) {
-                card.classList.remove('flipped');
-                setTimeout(fetchOnlineWord, 250);
-            } else { 
-                fetchOnlineWord(); 
-            }
-        }
-
-        // İnternetten tamamen rastgele ve sınırsız İngilizce kelime çeken fonksiyon
-        async function fetchOnlineWord() {
-            document.getElementById('englishWord').innerText = "Searching...";
-            document.getElementById('wordType').innerText = "FETCHING...";
-            document.getElementById('turkishMeaning').innerText = "Translating...";
-            document.getElementById('sampleEng').innerText = "...";
-            document.getElementById('sampleTr').innerText = "...";
-
-            try {
-                // 1. Adım: Tamamen ücretsiz, sınırsız rastgele kelime üreteci API'si
-                const wordResponse = await fetch('https://random-word-api.herokuapp.com/word?number=1');
-                const wordArray = await wordResponse.json();
-                currentWord = wordArray[0];
-                
-                // Baş harfini büyütelim
-                const formattedWord = currentWord.charAt(0).toUpperCase() + currentWord.slice(1);
-                document.getElementById('englishWord').innerText = formattedWord;
-
-                // 2. Adım: Kelimenin türünü ve örnek cümlesini Dictionary API'den çekelim
-                const dictResponse = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${currentWord}`);
-                
-                let partOfSpeech = "Vocabulary";
-                let exampleSentence = `The study of the word "${currentWord}" is valuable for language exams.`;
-
-                if (dictResponse.ok) {
-                    const dictData = await dictResponse.json();
-                    if (dictData[0] && dictData[0].meanings[0]) {
-                        partOfSpeech = dictData[0].meanings[0].partOfSpeech.toUpperCase();
-                        const definition = dictData[0].meanings[0].definitions[0];
-                        if (definition && definition.example) {
-                            exampleSentence = definition.example;
-                        }
-                    }
-                }
-                document.getElementById('wordType').innerText = partOfSpeech;
-
-                // Kelimeyi örnek cümle içinde mor renkle parlatalım
-                const regex = new RegExp(`\\b${currentWord}\\b`, 'gi');
-                const highlightedSentence = exampleSentence.replace(regex, `<span class='highlight-word'>$&</span>`);
-                document.getElementById('sampleEng').innerHTML = highlightedSentence;
-
-                // 3. Adım: Kelimenin ve Cümlenin Türkçe karşılığını ücretsiz MyMemory API ile canlı çevirelim
-                // Kelime çevirisi
-                const translateWordUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(currentWord)}&langpair=en|tr`;
-                const trWordResponse = await fetch(translateWordUrl);
-                const trWordData = await trWordResponse.json();
-                let turkishMeaning = trWordData.responseData.translatedText;
-                
-                // Eğer sistem kelimeyi birebir çeviremediyse temizleyelim
-                if(turkishMeaning.toLowerCase() === currentWord.toLowerCase()) {
-                    turkishMeaning = "Genel Akademik Kelime";
-                }
-                document.getElementById('turkishMeaning').innerText = turkishMeaning;
-
-                // Cümle çevirisi
-                const translateSentenceUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(exampleSentence)}&langpair=en|tr`;
-                const trSentResponse = await fetch(translateSentenceUrl);
-                const trSentData = await trSentResponse.json();
-                document.getElementById('sampleTr').innerText = trSentData.responseData.translatedText;
-
-            } catch (error) {
-                // İnternet anlık koparsa veya API yorulursa sistem çökmesin diye güvenli hata yönetimi
-                document.getElementById('englishWord').innerText = "Connection Alert";
-                document.getElementById('wordType').innerText = "ERROR";
-                document.getElementById('turkishMeaning').innerText = "Lütfen tekrar deneyin.";
-                document.getElementById('sampleEng').innerText = "An error occurred while fetching online data.";
-                document.getElementById('sampleTr').innerText = "İnternet bağlantınızı kontrol edip sıradaki kelimeye basın.";
-            }
-        }
-
-        // Sayfa ilk yüklendiğinde bir tane kelime getirsin
-        window.onload = fetchOnlineWord;
-    </script>
-</body>
-</html>
