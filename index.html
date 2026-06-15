@@ -3,150 +3,331 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YDT Vocabulary Master</title>
+    <title>YDT Kelime Kartları</title>
     <style>
-        body { margin: 0; background-color: #0d0d11; color: #fff; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
-        .card { width: 320px; height: 400px; perspective: 1000px; cursor: pointer; }
-        .card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
-        .card.flipped .card-inner { transform: rotateY(180deg); }
-        .front, .back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border: 1px solid #333; border-radius: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; background: #1a1c23; }
-        .back { transform: rotateY(180deg); border-color: #9f7aea; }
-        .btn { margin-top: 30px; padding: 12px 30px; background: #553c9a; color: white; border: none; border-radius: 20px; cursor: pointer; font-weight: bold; }
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #0d0d11;
+            color: #e2e8f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            width: 90%;
+            max-width: 550px;
+            perspective: 1000px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: #9f7aea;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .sub-title {
+            font-size: 0.9rem;
+            color: #718096;
+            margin-bottom: 25px;
+        }
+
+        .card-box {
+            width: 100%;
+            height: 320px;
+            cursor: pointer;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-box.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-side {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 25px;
+            box-sizing: border-box;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            border: 1px solid #2d3748;
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, #1a1c23, #111217);
+        }
+
+        .card-back {
+            background: linear-gradient(135deg, #1b1424, #0d0914);
+            transform: rotateY(180deg);
+            border-color: #553c9a;
+            justify-content: space-between;
+        }
+
+        .word-type {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #a0aec0;
+            margin-bottom: 10px;
+        }
+
+        .word-text {
+            font-size: 2.4rem;
+            font-weight: bold;
+            color: #fff;
+            word-break: break-word;
+        }
+
+        .meaning-text {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: #b794f4;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .sentence-box {
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 3px solid #9f7aea;
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+            text-align: left;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .eng-sentence {
+            font-size: 0.95rem;
+            color: #e2e8f0;
+            font-style: italic;
+            line-height: 1.4;
+            margin-bottom: 5px;
+        }
+
+        /* Cümle içindeki kelimeyi mor yapacak sihirli dokunuş */
+        .highlight-word {
+            color: #b794f4;
+            font-weight: bold;
+            font-style: normal;
+        }
+
+        .tr-sentence {
+            font-size: 0.85rem;
+            color: #a0aec0;
+            line-height: 1.4;
+        }
+
+        .tip {
+            font-size: 0.75rem;
+            color: #4a5568;
+        }
+
+        .btn-next {
+            margin-top: 30px;
+            background-color: #553c9a;
+            color: #fff;
+            border: none;
+            padding: 14px 40px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(85, 60, 154, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .btn-next:hover {
+            background-color: #6b46c1;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(107, 70, 193, 0.6);
+        }
     </style>
 </head>
 <body>
 
-    <div class="card" id="card" onclick="this.classList.toggle('flipped')">
-        <div class="card-inner">
-            <div class="front"><h2 id="eng">...</h2><p>Tıkla ve çevir</p></div>
-            <div class="back"><h3 id="tr" style="color:#b794f4">...</h3><p id="ex" style="font-size:0.85rem; font-style:italic; text-align:center"></p></div>
+    <div class="container">
+        <h1>YDT Kelime Kartları</h1>
+        <div class="sub-title">Örnek Cümle ve Hafıza Destek Sistemi</div>
+
+        <div class="card-box" id="card" onclick="flipCard()">
+            <div class="card-side card-front">
+                <div class="word-type" id="wordType">Yükleniyor...</div>
+                <div class="word-text" id="englishWord">...</div>
+                <div class="tip" style="margin-top: 30px;">Anlamını ve örnek cümleyi görmek için tıkla</div>
+            </div>
+            <div class="card-side card-back">
+                <div class="word-type" style="color: #9f7aea; margin-bottom: 0;">TÜRKÇE ANLAMI</div>
+                <div class="meaning-text" id="turkishMeaning">...</div>
+                
+                <div class="sentence-box">
+                    <div class="eng-sentence" id="sampleEng">...</div>
+                    <div class="tr-sentence" id="sampleTr">...</div>
+                </div>
+
+                <div class="tip">Sıradaki kelimeye geçmek için aşağıdaki butona bas</div>
+            </div>
         </div>
+
+        <button class="btn-next" onclick="nextWord(event)">Sıradaki Kelime ➔</button>
     </div>
-    <button class="btn" onclick="nextWord(event)">Sıradaki Kelime ➔</button>
 
     <script>
-        const words = [
-            {eng:"Abandon", tr:"Terk etmek", ex:"They had to abandon the ship."}, {eng:"Ability", tr:"Yetenek", ex:"He has the ability to learn."},
-            {eng:"Abolish", tr:"Yürürlükten kaldırmak", ex:"They want to abolish the tax."}, {eng:"Abrupt", tr:"Ani", ex:"The change was abrupt."},
-            {eng:"Absence", tr:"Yokluk", ex:"His absence was noted."}, {eng:"Absolute", tr:"Mutlak", ex:"It is an absolute truth."},
-            {eng:"Absorb", tr:"Emmek", ex:"Sponges absorb water."}, {eng:"Abstract", tr:"Soyut", ex:"This is an abstract concept."},
-            {eng:"Abundant", tr:"Bol", ex:"We have abundant food."}, {eng:"Accelerate", tr:"Hızlandırmak", ex:"The car began to accelerate."},
-            {eng:"Accent", tr:"Aksan", ex:"She has a French accent."}, {eng:"Accept", tr:"Kabul etmek", ex:"I accept your apology."},
-            {eng:"Access", tr:"Erişim", ex:"We have access to the internet."}, {eng:"Accidental", tr:"Kazara", ex:"It was an accidental discovery."},
-            {eng:"Accommodate", tr:"Yerleştirmek", ex:"The hotel can accommodate 100."}, {eng:"Accompany", tr:"Eşlik etmek", ex:"Will you accompany me?"},
-            {eng:"Accomplish", tr:"Başarmak", ex:"You can accomplish anything."}, {eng:"Account", tr:"Hesap", ex:"Check your bank account."},
-            {eng:"Accumulate", tr:"Biriktirmek", ex:"Snow began to accumulate."}, {eng:"Accurate", tr:"Doğru", ex:"The clock is accurate."},
-            {eng:"Accuse", tr:"Suçlamak", ex:"They accused him of theft."}, {eng:"Achieve", tr:"Elde etmek", ex:"He achieved his goals."},
-            {eng:"Acknowledge", tr:"Kabul etmek", ex:"She acknowledged the error."}, {eng:"Acquire", tr:"Edinmek", ex:"I acquired new skills."},
-            {eng:"Act", tr:"Davranmak", ex:"You must act now."}, {eng:"Active", tr:"Aktif", ex:"She is very active."},
-            {eng:"Adapt", tr:"Uyum sağlamak", ex:"Adapt to the new life."}, {eng:"Add", tr:"Eklemek", ex:"Add some salt to the soup."},
-            {eng:"Adequate", tr:"Yeterli", ex:"Is this room adequate?"}, {eng:"Adjust", tr:"Ayarlamak", ex:"Adjust the seat."},
-            {eng:"Administer", tr:"Yönetmek", ex:"She administers the clinic."}, {eng:"Admire", tr:"Hayran kalmak", ex:"I admire your courage."},
-            {eng:"Admit", tr:"İtiraf etmek", ex:"He admitted his mistake."}, {eng:"Adopt", tr:"Evlat edinmek", ex:"They decided to adopt."},
-            {eng:"Advance", tr:"İlerlemek", ex:"The army began to advance."}, {eng:"Advantage", tr:"Avantaj", ex:"This is an advantage."},
-            {eng:"Adverse", tr:"Olumsuz", ex:"The outcome was adverse."}, {eng:"Advertise", tr:"Reklam yapmak", ex:"They advertise on TV."},
-            {eng:"Advise", tr:"Tavsiye etmek", ex:"I advise you to rest."}, {eng:"Advocate", tr:"Savunmak", ex:"He advocates for peace."},
-            {eng:"Affect", tr:"Etkilemek", ex:"Weather affects my mood."}, {eng:"Afford", tr:"Gücü yetmek", ex:"I cannot afford this car."},
-            {eng:"Aggressive", tr:"Saldırgan", ex:"The dog is aggressive."}, {eng:"Agree", tr:"Katılmak", ex:"I agree with you."},
-            {eng:"Aid", tr:"Yardım", ex:"They need medical aid."}, {eng:"Aim", tr:"Amaçlamak", ex:"We aim for excellence."},
-            {eng:"Alarm", tr:"Alarmlamak", ex:"The loud sound alarmed me."}, {eng:"Alert", tr:"Tetikte", ex:"Stay alert."},
-            {eng:"Alike", tr:"Benzer", ex:"They look alike."}, {eng:"Alleviate", tr:"Hafifletmek", ex:"Medicine alleviates the pain."},
-            {eng:"Allocate", tr:"Tahsis etmek", ex:"Allocate funds for research."}, {eng:"Allow", tr:"İzin vermek", ex:"They allowed us to enter."},
-            {eng:"Alter", tr:"Değiştirmek", ex:"Alter your plans."}, {eng:"Alternative", tr:"Alternatif", ex:"Is there an alternative?"},
-            {eng:"Ambitious", tr:"Hırslı", ex:"She is very ambitious."}, {eng:"Amend", tr:"Değiştirmek", ex:"They amended the law."},
-            {eng:"Amount", tr:"Miktar", ex:"The amount is small."}, {eng:"Amplify", tr:"Güçlendirmek", ex:"Amplify the signal."},
-            {eng:"Amuse", tr:"Eğlendirmek", ex:"The clown amused them."}, {eng:"Analyze", tr:"Analiz etmek", ex:"Analyze the data."},
-            {eng:"Ancestor", tr:"Ata", ex:"He studies his ancestors."}, {eng:"Ancient", tr:"Eski", ex:"Ancient history."},
-            {eng:"Announce", tr:"Duyurmak", ex:"They announced the news."}, {eng:"Annoy", tr:"Rahatsız etmek", ex:"Don't annoy me."},
-            {eng:"Annual", tr:"Yıllık", ex:"Annual report."}, {eng:"Anticipate", tr:"Beklemek", ex:"We anticipate success."},
-            {eng:"Anxiety", tr:"Kaygı", ex:"She has high anxiety."}, {eng:"Apart", tr:"Ayrı", ex:"Keep them apart."},
-            {eng:"Apparent", tr:"Açık", ex:"It is apparent to all."}, {eng:"Appeal", tr:"Cezbetmek", ex:"The idea appeals to me."},
-            {eng:"Appear", tr:"Görünmek", ex:"He appeared suddenly."}, {eng:"Applaud", tr:"Alkışlamak", ex:"They applauded loudly."},
-            {eng:"Apply", tr:"Başvurmak", ex:"Apply for the job."}, {eng:"Appoint", tr:"Atamak", ex:"They appointed a new boss."},
-            {eng:"Appreciate", tr:"Takdir etmek", ex:"I appreciate your help."}, {eng:"Approach", tr:"Yaklaşmak", ex:"Don't approach the cage."},
-            {eng:"Appropriate", tr:"Uygun", ex:"Wear appropriate clothes."}, {eng:"Approve", tr:"Onaylamak", ex:"The boss approved it."},
-            {eng:"Approximate", tr:"Yaklaşık", ex:"The approximate time is 5."}, {eng:"Arbitrary", tr:"Keyfi", ex:"The decision was arbitrary."},
-            {eng:"Argument", tr:"Tartışma", ex:"They had an argument."}, {eng:"Arise", tr:"Ortaya çıkmak", ex:"Problems may arise."},
-            {eng:"Arrange", tr:"Düzenlemek", ex:"Arrange the books."}, {eng:"Arrest", tr:"Tutuklamak", ex:"The police arrested him."},
-            {eng:"Arrive", tr:"Varmak", ex:"When will they arrive?"}, {eng:"Arrogant", tr:"Kibirli", ex:"He is very arrogant."},
-            {eng:"Articulate", tr:"İfade etmek", ex:"She can articulate well."}, {eng:"Artificial", tr:"Yapay", ex:"Artificial flowers."},
-            {eng:"Ascend", tr:"Yükselmek", ex:"The bird ascended fast."}, {eng:"Asleep", tr:"Uykuda", ex:"The baby is asleep."},
-            {eng:"Aspect", tr:"Yön/Bakış açısı", ex:"Consider every aspect."}, {eng:"Assemble", tr:"Toplamak", ex:"Assemble the parts."},
-            {eng:"Assert", tr:"İddia etmek", ex:"She asserted her rights."}, {eng:"Assess", tr:"Değerlendirmek", ex:"Assess the situation."},
-            {eng:"Assign", tr:"Atamak", ex:"Assign tasks to them."}, {eng:"Assist", tr:"Yardım etmek", ex:"Can you assist me?"},
-            {eng:"Associate", tr:"İlişkilendirmek", ex:"I associate music with joy."}, {eng:"Assume", tr:"Varsaymak", ex:"Don't assume anything."},
-            {eng:"Assure", tr:"Temin etmek", ex:"I assure you it is true."}, {eng:"Astonish", tr:"Şaşırtmak", ex:"The news astonished us."},
-            {eng:"Attach", tr:"Eklemek", ex:"Attach the file."}, {eng:"Attain", tr:"Ulaşmak", ex:"He attained his goal."},
-            {eng:"Attempt", tr:"Denemek", ex:"Make an attempt."}, {eng:"Attend", tr:"Katılmak", ex:"Attend the meeting."},
-            {eng:"Attitude", tr:"Tavır", ex:"Change your attitude."}, {eng:"Attract", tr:"Çekmek", ex:"Magnets attract iron."},
-            {eng:"Attribute", tr:"Atfetmek", ex:"Attribute it to luck."}, {eng:"Audience", tr:"Seyirci", ex:"The audience cheered."},
-            {eng:"Author", tr:"Yazar", ex:"Who is the author?"}, {eng:"Authority", tr:"Otorite", ex:"They have the authority."},
-            {eng:"Available", tr:"Müsait", ex:"Is this seat available?"}, {eng:"Average", tr:"Ortalama", ex:"The average is high."},
-            {eng:"Avoid", tr:"Kaçınmak", ex:"Avoid the dangerous area."}, {eng:"Await", tr:"Beklemek", ex:"I await your answer."},
-            {eng:"Award", tr:"Ödül", ex:"Win a gold award."}, {eng:"Aware", tr:"Farkında", ex:"Are you aware of this?"},
-            {eng:"Awkward", tr:"Garip/Kaba", ex:"It was an awkward silence."}, {eng:"Background", tr:"Geçmiş", ex:"Tell me your background."},
-            {eng:"Balance", tr:"Denge", ex:"Keep your balance."}, {eng:"Ban", tr:"Yasaklamak", ex:"Smoking is banned here."},
-            {eng:"Barely", tr:"Zar zor", ex:"I can barely hear you."}, {eng:"Barrier", tr:"Engel", ex:"The language barrier."},
-            {eng:"Base", tr:"Temel", ex:"On what base?"}, {eng:"Basic", tr:"Temel", ex:"The basic needs."},
-            {eng:"Behave", tr:"Davranmak", ex:"Behave yourself!"}, {eng:"Belief", tr:"İnanç", ex:"Strong beliefs."},
-            {eng:"Benefit", tr:"Fayda", ex:"It has many benefits."}, {eng:"Betray", tr:"İhanet etmek", ex:"He betrayed his friend."},
-            {eng:"Bias", tr:"Önyargı", ex:"Avoid any bias."}, {eng:"Bitter", tr:"Acı", ex:"The coffee is bitter."},
-            {eng:"Blame", tr:"Suçlamak", ex:"Don't blame me."}, {eng:"Blank", tr:"Boş", ex:"Fill the blank."},
-            {eng:"Blend", tr:"Karışım", ex:"A perfect blend."}, {eng:"Blind", tr:"Kör", ex:"A blind person."},
-            {eng:"Boost", tr:"Artırmak", ex:"Boost your confidence."}, {eng:"Border", tr:"Sınır", ex:"Cross the border."},
-            {eng:"Bother", tr:"Rahatsız etmek", ex:"Does it bother you?"}, {eng:"Boundary", tr:"Sınır", ex:"The boundary of the field."},
-            {eng:"Brave", tr:"Cesur", ex:"A brave soldier."}, {eng:"Brief", tr:"Kısa", ex:"Be brief, please."},
-            {eng:"Brilliant", tr:"Zeki", ex:"A brilliant student."}, {eng:"Broad", tr:"Geniş", ex:"A broad smile."},
-            {eng:"Budget", tr:"Bütçe", ex:"Check the budget."}, {eng:"Build", tr:"İnşa etmek", ex:"Build a house."},
-            {eng:"Bulk", tr:"Yığın", ex:"Buy in bulk."}, {eng:"Burden", tr:"Yük", ex:"A heavy burden."},
-            {eng:"Burst", tr:"Patlamak", ex:"The balloon burst."}, {eng:"Calculate", tr:"Hesaplamak", ex:"Calculate the cost."},
-            {eng:"Candidate", tr:"Aday", ex:"The candidate won."}, {eng:"Capacity", tr:"Kapasite", ex:"Full capacity."},
-            {eng:"Capture", tr:"Ele geçirmek", ex:"Capture the flag."}, {eng:"Careful", tr:"Dikkatli", ex:"Be careful."},
-            {eng:"Carry", tr:"Taşımak", ex:"Carry the bag."}, {eng:"Casual", tr:"Gündelik", ex:"Casual clothes."},
-            {eng:"Caution", tr:"Dikkat", ex:"Proceed with caution."}, {eng:"Celebrate", tr:"Kutlamak", ex:"Celebrate the victory."},
-            {eng:"Central", tr:"Merkezi", ex:"A central location."}, {eng:"Century", tr:"Yüzyıl", ex:"21st century."},
-            {eng:"Certain", tr:"Kesin", ex:"I am certain."}, {eng:"Challenge", tr:"Meydan okuma", ex:"Accept the challenge."},
-            {eng:"Chamber", tr:"Oda", ex:"The inner chamber."}, {eng:"Change", tr:"Değişim", ex:"Life is change."},
-            {eng:"Characteristic", tr:"Özellik", ex:"A key characteristic."}, {eng:"Charge", tr:"Ücret", ex:"What is the charge?"},
-            {eng:"Chase", tr:"Kovalama", ex:"A high speed chase."}, {eng:"Cheat", tr:"Kopya çekmek", ex:"Don't cheat."},
-            {eng:"Cheerful", tr:"Neşeli", ex:"A cheerful person."}, {eng:"Cherish", tr:"Değer vermek", ex:"Cherish your memories."},
-            {eng:"Choice", tr:"Seçim", ex:"Make a choice."}, {eng:"Chronicle", tr:"Kronik", ex:"Read the chronicle."},
-            {eng:"Circumstance", tr:"Durum", ex:"Under the circumstances."}, {eng:"Cite", tr:"Alıntı yapmak", ex:"Cite your sources."},
-            {eng:"Civil", tr:"Sivil", ex:"Civil rights."}, {eng:"Claim", tr:"İddia etmek", ex:"They claim it is true."},
-            {eng:"Clarity", tr:"Netlik", ex:"Speak with clarity."}, {eng:"Classic", tr:"Klasik", ex:"A classic movie."},
-            {eng:"Classify", tr:"Sınıflandırmak", ex:"Classify these items."}, {eng:"Clean", tr:"Temiz", ex:"Keep it clean."},
-            {eng:"Clear", tr:"Açık", ex:"Is that clear?"}, {eng:"Client", tr:"Müşteri", ex:"A satisfied client."},
-            {eng:"Climate", tr:"İklim", ex:"Hot climate."}, {eng:"Cling", tr:"Tutunmak", ex:"Cling to hope."},
-            {eng:"Close", tr:"Yakın", ex:"Stay close."}, {eng:"Cluster", tr:"Küme", ex:"A cluster of stars."},
-            {eng:"Coarse", tr:"Kaba", ex:"Coarse sand."}, {eng:"Coincide", tr:"Denk gelmek", ex:"The dates coincide."},
-            {eng:"Collapse", tr:"Çöküş", ex:"The building collapsed."}, {eng:"Colleague", tr:"İş arkadaşı", ex:"My colleague works hard."},
-            {eng:"Collect", tr:"Toplamak", ex:"Collect stamps."}, {eng:"Comfort", tr:"Konfor", ex:"Find comfort here."},
-            {eng:"Command", tr:"Emir", ex:"Follow the command."}, {eng:"Comment", tr:"Yorum", ex:"Write a comment."},
-            {eng:"Commit", tr:"Taahhüt etmek", ex:"Commit to success."}, {eng:"Common", tr:"Ortak", ex:"It is common knowledge."},
-            {eng:"Communicate", tr:"İletişim kurmak", ex:"Communicate clearly."}, {eng:"Community", tr:"Topluluk", ex:"Serve the community."},
-            {eng:"Compare", tr:"Kıyaslamak", ex:"Compare these two."}, {eng:"Compassion", tr:"Şefkat", ex:"Show compassion."},
-            {eng:"Compel", tr:"Zorlamak", ex:"Circumstances compel me."}, {eng:"Compensate", tr:"Tazmin etmek", ex:"Compensate the loss."},
-            {eng:"Competent", tr:"Yeterli", ex:"A competent worker."}, {eng:"Compile", tr:"Derlemek", ex:"Compile the data."},
-            {eng:"Complain", tr:"Şikayet etmek", ex:"Don't complain."}, {eng:"Complete", tr:"Tamamlamak", ex:"Complete the task."},
-            {eng:"Complex", tr:"Karmaşık", ex:"A complex problem."}, {eng:"Comply", tr:"Uymak", ex:"Comply with the rules."},
-            {eng:"Compose", tr:"Oluşturmak", ex:"Compose a letter."}, {eng:"Compound", tr:"Bileşik", ex:"A chemical compound."}
+        // Cümle içindeki kelimeler <span class="highlight-word"> ile mor yapıldı!
+        const wordPool = [
+            { 
+                eng: "Enhance", 
+                tr: "Geliştirmek, artırmak", 
+                type: "Verb (Fiil)",
+                exEng: "The new strategy will <span class=\"highlight-word\">enhance</span> your language skills.", 
+                exTr: "Yeni strateji, dil becerilerinizi geliştirecektir." 
+            },
+            { 
+                eng: "Facilitate", 
+                tr: "Kolaylaştırmak", 
+                type: "Verb (Fiil)",
+                exEng: "Structured study plans <span class=\"highlight-word\">facilitate</span> learning difficult vocabulary.", 
+                exTr: "Planlı çalışma programları, zor kelimeleri öğrenmeyi kolaylaştırır." 
+            },
+            { 
+                eng: "Implement", 
+                tr: "Uygulamaya koymak, yürütmek", 
+                type: "Verb (Fiil)",
+                exEng: "The school decided to <span class=\"highlight-word\">implement</span> a new curriculum next term.", 
+                exTr: "Okul, gelecek dönem yeni bir müfredatı uygulamaya koymaya karar verdi." 
+            },
+            { 
+                eng: "Assess", 
+                tr: "Değerlendirmek, oranlamak", 
+                type: "Verb (Fiil)",
+                exEng: "Mock exams are used to <span class=\"highlight-word\">assess</span> the progress of students.", 
+                exTr: "Deneme sınavları, öğrencilerin ilerlemesini değerlendirmek için kullanılır." 
+            },
+            { 
+                eng: "Investigate", 
+                tr: "Araştırmak, soruşturmak", 
+                type: "Verb (Fiil)",
+                exEng: "Scientists are trying to <span class=\"highlight-word\">investigate</span> the causes of climate change.", 
+                exTr: "Bilim insanları iklim değişikliğinin nedenlerini araştırmaya çalışıyorlar." 
+            },
+            { 
+                eng: "Determine", 
+                tr: "Belirlemek, saptamak", 
+                type: "Verb (Fiil)",
+                exEng: "Your performance in the exam will <span class=\"highlight-word\">determine</span> your university choice.", 
+                exTr: "Sınavdaki performansınız üniversite tercihinizi belirleyecektir." 
+            },
+            { 
+                eng: "Acquire", 
+                tr: "Edinmek, kazanmak", 
+                type: "Verb (Fiil)",
+                exEng: "It takes time and dedication to <span class=\"highlight-word\">acquire</span> a new foreign language.", 
+                exTr: "Yeni bir yabancı dil edinmek zaman ve kararlılık gerektirir." 
+            },
+            { 
+                eng: "Contribute", 
+                tr: "Katkıda bulunmak", 
+                type: "Verb (Fiil)",
+                exEng: "Regular reading will <span class=\"highlight-word\">contribute</span> significantly to your YDT score.", 
+                exTr: "Düzenli okuma yapmak YDT puanınıza önemli ölçüde katkıda bulunacaktır." 
+            },
+            { 
+                eng: "Maintain", 
+                tr: "Sürdürmek, korumak", 
+                type: "Verb (Fiil)",
+                exEng: "You must <span class=\"highlight-word\">maintain</span> your motivation high during the exam preparation.", 
+                exTr: "Sınav hazırlığı boyunca motivasyonunuzu yüksek sürdürmelisiniz." 
+            },
+            { 
+                eng: "Vulnerable", 
+                tr: "Hassas, savunmasız", 
+                type: "Adjective (Sıfat)",
+                exEng: "Old buildings are highly <span class=\"highlight-word\">vulnerable</span> to strong earthquakes.", 
+                exTr: "Eski binalar güçlü depremlere karşı son derece savunmasızdır." 
+            },
+            { 
+                eng: "Sustainable", 
+                tr: "Sürdürülebilir", 
+                type: "Adjective (Sıfat)",
+                exEng: "Using renewable energy sources is essential for a <span class=\"highlight-word\">sustainable</span> environment.", 
+                exTr: "Yenilenebilir enerji kaynakları kullanmak sürdürülebilir bir çevre için şarttır." 
+            },
+            { 
+                eng: "Significant", 
+                tr: "Önemli, kayda değer", 
+                type: "Adjective (Sıfat)",
+                exEng: "There has been a <span class=\"highlight-word\">significant</span> increase in the use of AI tools recently.", 
+                exTr: "Son zamanlarda yapay zeka araçlarının kullanımında önemli bir artış oldu." 
+            },
+            { 
+                eng: "Anxiety", 
+                tr: "Kaygı, endişe", 
+                type: "Noun (İsim)",
+                exEng: "Deep breathing exercises can help students reduce exam <span class=\"highlight-word\">anxiety</span>.", 
+                exTr: "Derin nefes egzersizleri öğrencilerin sınav kaygısını azaltmalarına yardımcı olabilir." 
+            },
+            { 
+                eng: "Obstacle", 
+                tr: "Engelleme, bariyer, mani", 
+                type: "Noun (İsim)",
+                exEng: "Fear of failure is often the biggest <span class=\"highlight-word\">obstacle</span> to success.", 
+                exTr: "Başarısızlık korkusu genellikle başarının önündeki en büyük engeldir." 
+            }
         ];
 
-        let queue = [...words].sort(() => Math.random() - 0.5);
+        const card = document.getElementById('card');
+        const englishWordElem = document.getElementById('englishWord');
+        const turkishMeaningElem = document.getElementById('turkishMeaning');
+        const wordTypeElem = document.getElementById('wordType');
+        const sampleEngElem = document.getElementById('sampleEng');
+        const sampleTrElem = document.getElementById('sampleTr');
 
-        function nextWord(e) {
-            e.stopPropagation();
-            document.getElementById('card').classList.remove('flipped');
-            if(queue.length === 0) queue = [...words].sort(() => Math.random() - 0.5);
-            let w = queue.pop();
-            setTimeout(() => {
-                document.getElementById('eng').innerText = w.eng;
-                document.getElementById('tr').innerText = w.tr;
-                document.getElementById('ex').innerText = w.ex;
-            }, 300);
+        function flipCard() {
+            card.classList.toggle('flipped');
         }
 
-        window.onload = () => nextWord({stopPropagation:()=>0});
+        function nextWord(event) {
+            event.stopPropagation(); 
+            
+            if (card.classList.contains('flipped')) {
+                card.classList.remove('flipped');
+                setTimeout(setRandomWord, 250);
+            } else {
+                setRandomWord();
+            }
+        }
+
+        function setRandomWord() {
+            const randomIndex = Math.floor(Math.random() * wordPool.length);
+            const selectedWord = wordPool[randomIndex];
+            
+            wordTypeElem.innerText = selectedWord.type;
+            englishWordElem.innerText = selectedWord.eng;
+            turkishMeaningElem.innerText = selectedWord.tr;
+            
+            // Düz yazı yerine HTML kodunu (yani o mor renk etiketini) okuması için innerHTML yaptık
+            sampleEngElem.innerHTML = selectedWord.exEng;
+            sampleTrElem.innerText = selectedWord.exTr;
+        }
+
+        window.onload = setRandomWord;
     </script>
 </body>
 </html>
