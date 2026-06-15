@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YDT Kelime Kartları</title>
+    <style>
+        /* Modern ve Gözü Yormayan Karanlık Gotik Tema */
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #0d0d11;
+            color: #e2e8f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            width: 90%;
+            max-width: 500px;
+            perspective: 1000px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: #9f7aea; /* Gotik Mor */
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .sub-title {
+            font-size: 0.9rem;
+            color: #718096;
+            margin-bottom: 30px;
+        }
+
+        /* Kelime Kartı Tasarımı */
+        .card-box {
+            width: 100%;
+            height: 250px;
+            cursor: pointer;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-box.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-side {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            border: 1px solid #2d3748;
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, #1a1c23, #111217);
+        }
+
+        .card-back {
+            background: linear-gradient(135deg, #1b1424, #0d0914);
+            transform: rotateY(180deg);
+            border-color: #553c9a;
+        }
+
+        .word-type {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #a0aec0;
+            margin-bottom: 15px;
+        }
+
+        .word-text {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #fff;
+            word-break: break-word;
+        }
+
+        .meaning-text {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #b794f4;
+            text-align: center;
+        }
+
+        .tip {
+            font-size: 0.8rem;
+            color: #4a5568;
+            margin-top: 20px;
+        }
+
+        /* Buton */
+        .btn-next {
+            margin-top: 35px;
+            background-color: #553c9a;
+            color: #fff;
+            border: none;
+            padding: 14px 40px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(85, 60, 154, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .btn-next:hover {
+            background-color: #6b46c1;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(107, 70, 193, 0.6);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>YDT Kelime Kartları</h1>
+        <div class="sub-title">Rastgele ve Tekrarlı Ezber Sistemi</div>
+
+        <div class="card-box" id="card" onclick="flipCard()">
+            <!-- Ön Yüz (İngilizce) -->
+            <div class="card-side card-front">
+                <div class="word-type" id="wordType">Yükleniyor...</div>
+                <div class="word-text" id="englishWord">...</div>
+                <div class="tip">Anlamını görmek için karta tıkla</div>
+            </div>
+            <!-- Arka Yüz (Türkçe) -->
+            <div class="card-side card-back">
+                <div class="word-type" style="color: #9f7aea;">TÜRKÇE ANLAMI</div>
+                <div class="meaning-text" id="turkishMeaning">...</div>
+                <div class="tip">Sistem hafızan için kelimeleri tekrar ettirir</div>
+            </div>
+        </div>
+
+        <button class="btn-next" onclick="nextWord(event)">Sıradaki Kelime ➔</button>
+    </div>
+
+    <script>
+        // Gönderdiğin YDT Kelimelerinin Tamamı
+        const wordPool = [
+            { eng: "Enhance", tr: "Geliştirmek, artırmak", type: "Verb (Fiil)" },
+            { eng: "Facilitate", tr: "Kolaylaştırmak", type: "Verb (Fiil)" },
+            { eng: "Implement", tr: "Uygulamaya koymak, yürütmek", type: "Verb (Fiil)" },
+            { eng: "Assess", tr: "Değerlendirmek, oranlamak", type: "Verb (Fiil)" },
+            { eng: "Investigate", tr: "Araştırmak, soruşturmak", type: "Verb (Fiil)" },
+            { eng: "Determine", tr: "Belirlemek, saptamak", type: "Verb (Fiil)" },
+            { eng: "Acquire", tr: "Edinmek, kazanmak", type: "Verb (Fiil)" },
+            { eng: "Contribute", tr: "Katkıda bulunmak", type: "Verb (Fiil)" },
+            { eng: "Maintain", tr: "Sürdürmek, korumak", type: "Verb (Fiil)" },
+            { eng: "Preserve", tr: "Korumak, muhafaza etmek", type: "Verb (Fiil)" },
+            { eng: "Promote", tr: "Desteklemek, tanıtımını yapmak", type: "Verb (Fiil)" },
+            { eng: "Achieve", tr: "Başarmak, elde etmek", type: "Verb (Fiil)" },
+            { eng: "Adapt", tr: "Uyum sağlamak", type: "Verb (Fiil)" },
+            { eng: "Analyze", tr: "Analiz etmek, incelemek", type: "Verb (Fiil)" },
+            { eng: "Attain", tr: "Ulaşmak, erişmek", type: "Verb (Fiil)" },
+            { eng: "Conduct", tr: "Yürütmek (deney vb.)", type: "Verb (Fiil)" },
+            { eng: "Convert", tr: "Dönüştürmek", type: "Verb (Fiil)" },
+            { eng: "Demonstrate", tr: "Kanıtlamak, göstermek", type: "Verb (Fiil)" },
+            { eng: "Derive", tr: "-den türemek, kaynaklanmak", type: "Verb (Fiil)" },
+            { eng: "Diminish", tr: "Azalmak, eksilmek", type: "Verb (Fiil)" },
+            { eng: "Disrupt", tr: "Aksatmak, bozmak", type: "Verb (Fiil)" },
+            { eng: "Ensure", tr: "Garantiye almak, sağlama almak", type: "Verb (Fiil)" },
+            { eng: "Establish", tr: "Kurmak, belirlemek", type: "Verb (Fiil)" },
+            { eng: "Evaluate", tr: "Değerlendirmek", type: "Verb (Fiil)" },
+            { eng: "Evolve", tr: "Evrimleşmek, gelişmek", type: "Verb (Fiil)" },
+            { eng: "Exceed", tr: "Sınırı aşmak, geçmek", type: "Verb (Fiil)" },
+            { eng: "Expand", tr: "Genişlemek, büyümek", type: "Verb (Fiil)" },
+            { eng: "Exploit", tr: "Sömürmek, faydalanmak", type: "Verb (Fiil)" },
+            { eng: "Generate", tr: "Üretmek, oluşturmak", type: "Verb (Fiil)" },
+            { eng: "Identify", tr: "Tanımlamak, tespit etmek", type: "Verb (Fiil)" },
+            { eng: "Illustrate", tr: "Örneklemek, resimlemek", type: "Verb (Fiil)" },
+            { eng: "Improve", tr: "Gelişmek, iyileşmek", type: "Verb (Fiil)" },
+            { eng: "Indicate", tr: "Göstermek, işaret etmek", type: "Verb (Fiil)" },
+            { eng: "Influence", tr: "Etkilemek", type: "Verb (Fiil)" },
+            { eng: "Inhibit", tr: "Engellemek, kısıtlamak", type: "Verb (Fiil)" },
+            { eng: "Modify", tr: "Değişiklik yapmak", type: "Verb (Fiil)" },
+            { eng: "Obtain", tr: "Elde etmek, edinmek", type: "Verb (Fiil)" },
+            { eng: "Overcome", tr: "Üstesinden gelmek", type: "Verb (Fiil)" },
+            { eng: "Perceive", tr: "Algılamak", type: "Verb (Fiil)" },
+            { eng: "Predict", tr: "Tahmin etmek", type: "Verb (Fiil)" },
+            { eng: "Pursue", tr: "Peşinden koşmak, takip etmek", type: "Verb (Fiil)" },
+            { eng: "Reduce", tr: "Azaltmak", type: "Verb (Fiil)" },
+            { eng: "Reveal", tr: "Açığa çıkarmak", type: "Verb (Fiil)" },
+            { eng: "Stimulate", tr: "Teşvik etmek, uyarmak", type: "Verb (Fiil)" },
+            { eng: "Undermine", tr: "Baltalamak, zayıflatmak", type: "Verb (Fiil)" },
+            { eng: "Utilize", tr: "Kullanmak, faydalanmak", type: "Verb (Fiil)" },
+            { eng: "Sustainable", tr: "Sürdürülebilir", type: "Adjective (Sıfat)" },
+            { eng: "Renewable", tr: "Yenilenebilir", type: "Adjective (Sıfat)" },
+            { eng: "Innovative", tr: "Yenilikçi", type: "Adjective (Sıfat)" },
+            { eng: "Significant", tr: "Önemli, kayda değer", type: "Adjective (Sıfat)" },
+            { eng: "Crucial", tr: "Çok önemli, kritik", type: "Adjective (Sıfat)" },
+            { eng: "Efficient", tr: "Verimli, etkili", type: "Adjective (Sıfat)" },
+            { eng: "Beneficial", tr: "Faydalı, yararlı", type: "Adjective (Sıfat)" },
+            { eng: "Vulnerable", tr: "Hassas, savunmasız", type: "Adjective (Sıfat)" },
+            { eng: "Reliable", tr: "Güvenilir", type: "Adjective (Sıfat)" },
+            { eng: "Remarkable", tr: "Olağanüstü, dikkat çekici", type: "Adjective (Sıfat)" },
+            { eng: "Essential", tr: "Şart, zorunlu, temel", type: "Adjective (Sıfat)" },
+            { eng: "Fundamental", tr: "Temel, esas", type: "Adjective (Sıfat)" },
+            { eng: "Considerable", tr: "Azımsanamayacak, büyük ölçüde", type: "Adjective (Sıfat)" },
+            { eng: "Adequate", tr: "Yeterli, kafi", type: "Adjective (Sıfat)" },
+            { eng: "Accurate", tr: "Doğru, kesin, hatasız", type: "Adjective (Sıfat)" },
+            { eng: "Complex", tr: "Karmaşık", type: "Adjective (Sıfat)" },
+            { eng: "Diverse", tr: "Çeşitli, farklı", type: "Adjective (Sıfat)" },
+            { eng: "Flexible", tr: "Esnek", type: "Adjective (Sıfat)" },
+            { eng: "Harmful", tr: "Zararlı", type: "Adjective (Sıfat)" },
+            { eng: "Limited", tr: "Sınırlı, kısıtlı", type: "Adjective (Sıfat)" },
+            { eng: "Logical", tr: "Mantıklı", type: "Adjective (Sıfat)" },
+            { eng: "Notable", tr: "Kayda değer, önemli", type: "Adjective (Sıfat)" },
+            { eng: "Permanent", tr: "Kalıcı", type: "Adjective (Sıfat)" },
+            { eng: "Potential", tr: "Potansiyel, olası", type: "Adjective (Sıfat)" },
+            { eng: "Practical", tr: "Pratik, kullanışlı", type: "Adjective (Sıfat)" },
+            { eng: "Productive", tr: "Üretken, verimli", type: "Adjective (Sıfat)" },
+            { eng: "Profound", tr: "Derin, büyük, köklü", type: "Adjective (Sıfat)" },
+            { eng: "Relevant", tr: "İlgili, ilişkili", type: "Adjective (Sıfat)" },
+            { eng: "Resistant", tr: "Dirençli, dayanıklı", type: "Adjective (Sıfat)" },
+            { eng: "Sufficient", tr: "Yeterli", type: "Adjective (Sıfat)" },
+            { eng: "Temporary", tr: "Geçici", type: "Adjective (Sıfat)" },
+            { eng: "Traditional", tr: "Geleneksel", type: "Adjective (Sıfat)" },
+            { eng: "Typical", tr: "Tipik, özgün", type: "Adjective (Sıfat)" },
+            { eng: "Unique", tr: "Eşsiz, benzersiz", type: "Adjective (Sıfat)" },
+            { eng: "Valuable", tr: "Değerli, kıymetli", type: "Adjective (Sıfat)" },
+            { eng: "Various", tr: "Çeşitli, türlü türlü", type: "Adjective (Sıfat)" },
+            { eng: "Widespread", tr: "Yaygın", type: "Adjective (Sıfat)" },
+            { eng: "Reasonable", tr: "Makul, mantıklı", type: "Adjective (Sıfat)" },
+            { eng: "Environment", tr: "Çevre", type: "Noun (İsim)" },
+            { eng: "Biodiversity", tr: "Biyoçeşitlilik", type: "Noun (İsim)" },
+            { eng: "Conservation", tr: "Koruma, muhafaza", type: "Noun (İsim)" },
+            { eng: "Climate", tr: "İklim", type: "Noun (İsim)" },
+            { eng: "Emission", tr: "Yayım, salınım", type: "Noun (İsim)" },
+            { eng: "Resource", tr: "Kaynak", type: "Noun (İsim)" },
+            { eng: "Consumption", tr: "Tüketim", type: "Noun (İsim)" },
+            { eng: "Awareness", tr: "Farkındalık, bilinçlenme", type: "Noun (İsim)" },
+            { eng: "Welfare", tr: "Refah, iyi yaşam", type: "Noun (İsim)" },
+            { eng: "Diversity", tr: "Çeşitlilik", type: "Noun (İsim)" },
+            { eng: "Equality", tr: "Eşitlik", type: "Noun (İsim)" },
+            { eng: "Poverty", tr: "Yoksulluk, fakirlik", type: "Noun (İsim)" },
+            { eng: "Discrimination", tr: "Ayrımcılık", type: "Noun (İsim)" },
+            { eng: "Behaviour", tr: "Davranış", type: "Noun (İsim)" },
+            { eng: "Anxiety", tr: "Kaygı, endişe", type: "Noun (İsim)" },
+            { eng: "Motivation", tr: "Motivasyon", type: "Noun (İsim)" },
+            { eng: "Perception", tr: "Algı", type: "Noun (İsim)" },
+            { eng: "Innovation", tr: "Yenilik, inovasyon", type: "Noun (İsim)" },
+            { eng: "Device", tr: "Alet, cihaz", type: "Noun (İsim)" },
+            { eng: "Technology", tr: "Teknoloji", type: "Noun (İsim)" },
+            { eng: "Achievement", tr: "Başarı", type: "Noun (İsim)" },
+            { eng: "Capacity", tr: "Kapasite", type: "Noun (İsim)" },
+            { eng: "Challenge", tr: "Meydan okuma, zorluk", type: "Noun (İsim)" },
+            { eng: "Circumstance", tr: "Durum, koşul", type: "Noun (İsim)" },
+            { eng: "Consequence", tr: "Sonuç, netice", type: "Noun (İsim)" },
+            { eng: "Controversy", tr: "Tartışma, anlaşmazlık", type: "Noun (İsim)" },
+            { eng: "Crisis", tr: "Kriz", type: "Noun (İsim)" },
+            { eng: "Demand", tr: "Talep, istek", type: "Noun (İsim)" },
+            { eng: "Development", tr: "Gelişim, ilerleme", type: "Noun (İsim)" },
+            { eng: "Economy", tr: "Ekonomi", type: "Noun (İsim)" },
+            { eng: "Effect", tr: "Etki", type: "Noun (İsim)" },
+            { eng: "Evidence", tr: "Kanıt, delil", type: "Noun (İsim)" },
+            { eng: "Factor", tr: "Faktör, etken", type: "Noun (İsim)" },
+            { eng: "Impact", tr: "Etki, darbe", type: "Noun (İsim)" },
+            { eng: "Interaction", tr: "Etkileşim", type: "Noun (İsim)" },
+            { eng: "Issue", tr: "Sorun, mesele", type: "Noun (İsim)" },
+            { eng: "Limitation", tr: "Sınırlama, kısıtlama", type: "Noun (İsim)" },
+            { eng: "Measure", tr: "Önlem, tedbir", type: "Noun (İsim)" },
+            { eng: "Method", tr: "Yöntem, metot", type: "Noun (İsim)" },
+            { eng: "Obstacle", tr: "Engelleme, bariyer, mani", type: "Noun (İsim)" },
+            { eng: "Opportunity", tr: "Fırsat", type: "Noun (İsim)" },
+            { eng: "Outcome", tr: "Sonuç, çıktı", type: "Noun (İsim)" },
+            { eng: "Pattern", tr: "Kalıp, örüntü", type: "Noun (İsim)" },
+            { eng: "Policy", tr: "Politika, strateji", type: "Noun (İsim)" },
+            { eng: "Population", tr: "Nüfus", type: "Noun (İsim)" },
+            { eng: "Prediction", tr: "Tahmin", type: "Noun (İsim)" },
+            { eng: "Pressure", tr: "Baskı, stres", type: "Noun (İsim)" },
+            { eng: "Priority", tr: "Öncelik", type: "Noun (İsim)" },
+            { eng: "Process", tr: "Süreç", type: "Noun (İsim)" },
+            { eng: "Research", tr: "Araştırma", type: "Noun (İsim)" },
+            { eng: "Response", tr: "Tepki, yanıt", type: "Noun (İsim)" },
+            { eng: "Shortage", tr: "Kıtlık, eksiklik", type: "Noun (İsim)" },
+            { eng: "Strategy", tr: "Strateji", type: "Noun (İsim)" },
+            { eng: "Tendency", tr: "Eğilim, meyil", type: "Noun (İsim)" },
+            { eng: "Theory", tr: "Teori, kuram", type: "Noun (İsim)" },
+            { eng: "Threat", tr: "Tehdit", type: "Noun (İsim)" },
+            { eng: "Trend", tr: "Eğilim, akım", type: "Noun (İsim)" },
+            { eng: "Value", tr: "Değer", type: "Noun (İsim)" },
+            { eng: "Artificial", tr: "Yapay", type: "Adjective (Sıfat)" },
+            { eng: "Intelligence", tr: "Zeka", type: "Noun (İsim)" },
+            { eng: "Psychological", tr: "Psikolojik", type: "Adjective (Sıfat)" },
+            { eng: "Frequently", tr: "Sık sık", type: "Adverb (Zarf)" },
+            { eng: "Gradually", tr: "Kademeli olarak, yavaş yavaş", type: "Adverb (Zarf)" },
+            { eng: "Eventually", tr: "Er ya da geç, nihayetinde", type: "Adverb (Zarf)" },
+            { eng: "Previously", tr: "Önceden, geçmişte", type: "Adverb (Zarf)" },
+            { eng: "Primarily", tr: "Esasen, öncelikle", type: "Adverb (Zarf)" },
+            { eng: "Significantly", tr: "Önemli ölçüde", type: "Adverb (Zarf)" },
+            { eng: "Merely", tr: "Sadece, yalnızca", type: "Adverb (Zarf)" },
+            { eng: "Virtually", tr: "Neredeyse, hemen hemen", type: "Adverb (Zarf)" },
+            { eng: "Increasingly", tr: "Giderek artan bir şekilde", type: "Adverb (Zarf)" },
+            { eng: "Apparently", tr: "Görünüşe bakılırsa", type: "Adverb (Zarf)" },
+            { eng: "Presumably", tr: "Tahminen, herhalde", type: "Adverb (Zarf)" },
+            { eng: "Particularly", tr: "Özellikle", type: "Adverb (Zarf)" },
+            { eng: "Relatively", tr: "Nispeten, oranla", type: "Adverb (Zarf)" },
+            { eng: "Indeed", tr: "Aslında, doğrusu, gerçekten", type: "Adverb / Bağlaç" },
+            { eng: "Thus", tr: "Böylece, bu nedenle", type: "Bağlaç (Transition)" },
+            { eng: "Therefore", tr: "Bu yüzden, dolayısıyla", type: "Bağlaç (Transition)" },
+            { eng: "Moreover", tr: "Dahası, üstelik", type: "Bağlaç (Transition)" },
+            { eng: "Furthermore", tr: "Ayrıca, dahası", type: "Bağlaç (Transition)" },
+            { eng: "However", tr: "Ancak, yine de", type: "Bağlaç (Transition)" },
+            { eng: "Nevertheless", tr: "Yine de, buna rağmen", type: "Bağlaç (Transition)" },
+            { eng: "Consequently", tr: "Sonuç olarak", type: "Bağlaç (Transition)" },
+            { eng: "Otherwise", tr: "Aksi takdirde", type: "Bağlaç (Transition)" },
+            { eng: "Meanwhile", tr: "Bu esnada, eş zamanlı", type: "Bağlaç (Transition)" },
+            { eng: "Accordingly", tr: "Bu doğrultuda, uygun olarak", type: "Bağlaç (Transition)" },
+            { eng: "Alternatively", tr: "Alternatif olarak", type: "Bağlaç (Transition)" },
+            { eng: "Similarly", tr: "Benzer şekilde", type: "Bağlaç (Transition)" },
+            { eng: "Subsequently", tr: "Sonradan, akabinde", type: "Bağlaç (Transition)" },
+            { eng: "Although", tr: "-e rağmen, -e karşın", type: "Bağlaç (Conjunction)" },
+            { eng: "Withal", tr: "Bununla birlikte, ayrıca", type: "Bağlaç (Transition)" },
+            { eng: "Whereas", tr: "-e tezatla, oysa, halbuki", type: "Bağlaç (Conjunction)" },
+            { eng: "Despite", tr: "-e rağmen", type: "Edat (Preposition)" },
+            { eng: "Regardless", tr: "Bakmaksızın, ne olursa olsun", type: "Zarf / Edat" },
+            { eng: "Throughout", tr: "Boyunca, her tarafında", type: "Edat (Preposition)" },
+            { eng: "Unlike", tr: "Aksine, -in tersine", type: "Edat (Preposition)" },
+            { eng: "Beyond", tr: "Ötesinde", type: "Edat (Preposition)" },
+            { eng: "Provided", tr: "Şartıyla, eğer", type: "Bağlaç (Conjunction)" },
+            { eng: "Owing to", tr: "-den dolayı, yüzünden", type: "Edat (Preposition)" },
+            { eng: "Instead of", tr: "-in yerine", type: "Edat (Preposition)" },
+            { eng: "Rather than", tr: "-den ziyade", type: "Edat / Bağlaç" },
+            { eng: "Contrast", tr: "Zıtlık, tezat", type: "Noun (İsim)" },
+            { eng: "Addition", tr: "İlave, ek", type: "Noun (İsim)" },
+            { eng: "Result", tr: "Sonuç", type: "Noun (İsim)" },
+            { eng: "Community", tr: "Topluluk, camia", type: "Noun (İsim)" },
+            { eng: "Society", tr: "Toplum", type: "Noun (İsim)" },
+            { eng: "Citizen", tr: "Vatandaş", type: "Noun (İsim)" },
+            { eng: "Heritage", tr: "Miras", type: "Noun (İsim)" },
+            { eng: "Tradition", tr: "Gelenek", type: "Noun (İsim)" },
+            { eng: "Culture", tr: "Kültür", type: "Noun (İsim)" },
+            { eng: "Media", tr: "Medya", type: "Noun (İsim)" },
+            { eng: "Communication", tr: "İletişim", type: "Noun (İsim)" },
+            { eng: "Network", tr: "Ağ, şebeke", type: "Noun (İsim)" },
+            { eng: "Digital", tr: "Dijital", type: "Adjective (Sıfat)" },
+            { eng: "Global", tr: "Küresel", type: "Adjective (Sıfat)" },
+            { eng: "Regional", tr: "Bölgesel", type: "Adjective (Sıfat)" },
+            { eng: "Urban", tr: "Şehirsel, kentsel", type: "Adjective (Sıfat)" },
+            { eng: "Rural", tr: "Kırsal", type: "Adjective (Sıfat)" },
+            { eng: "Migration", tr: "Göç", type: "Noun (İsim)" },
+            { eng: "Nutrition", tr: "Beslenme", type: "Noun (İsim)" },
+            { eng: "Disease", tr: "Hastalık", type: "Noun (İsim)" },
+            { eng: "Treatment", tr: "Tedavi, davranış", type: "Noun (İsim)" },
+            { eng: "Diagnosis", tr: "Teşhis, tanı", type: "Noun (İsim)" },
+            { eng: "Therapy", tr: "Terapi", type: "Noun (İsim)" },
+            { eng: "Recovery", tr: "İyileşme, toparlanma", type: "Noun (İsim)" },
+            { eng: "Education", tr: "Eğitim", type: "Noun (İsim)" },
+            { eng: "Curriculum", tr: "Müfredat", type: "Noun (İsim)" },
+            { eng: "Scholarship", tr: "Burs", type: "Noun (İsim)" },
+            { eng: "Academic", tr: "Akademik", type: "Adjective (Sıfat)" },
+            { eng: "Literacy", tr: "Okuryazarlık", type: "Noun (İsim)" },
+            { eng: "Employment", tr: "İstihdam, iş verme", type: "Noun (İsim)" },
+            { eng: "Occupation", tr: "Meslek, işgal", type: "Noun (İsim)" },
+            { eng: "Industry", tr: "Sanayi, endüstri", type: "Noun (İsim)" },
+            { eng: "Manufacturing", tr: "Üretim, imalat", type: "Noun (İsim)" },
+            { eng: "Agriculture", tr: "Tarım", type: "Noun (İsim)" },
+            { eng: "Transportation", tr: "Ulaşım, taşımacılık", type: "Noun (İsim)" },
+            { eng: "Exploration", tr: "Keşif, araştırma", type: "Noun (İsim)" },
+            { eng: "Discovery", tr: "Keşif", type: "Noun (İsim)" },
+            { eng: "Observation", tr: "Gözlem", type: "Noun (İsim)" },
+            { eng: "Experiment", tr: "Deney", type: "Noun (İsim)" },
+            { eng: "Hypothesis", tr: "Hipotez", type: "Noun (İsim)" },
+            { eng: "Survey", tr: "Anket, araştırma", type: "Noun (İsim)" },
+            { eng: "Statistics", tr: "İstatistik", type: "Noun (İsim)" },
+            { eng: "Conclusion", tr: "Sonuç, kanaat", type: "Noun (İsim)" },
+            { eng: "Comparison", tr: "Karşılaştırma", type: "Noun (İsim)" },
+            { eng: "Responsibility", tr: "Sorumluluk", type: "Noun (İsim)" },
+            { eng: "Cooperation", tr: "İşbirliği", type: "Noun (İsim)" },
+            { eng: "Participation", tr: "Katılım", type: "Noun (İsim)" },
+            { eng: "Adaptation", tr: "Adaptasyon, uyum", type: "Noun (İsim)" },
+            { eng: "Satisfaction", tr: "Memnuniyet", type: "Noun (İsim)" },
+            { eng: "Protection", tr: "Koruma", type: "Noun (İsim)" },
+            { eng: "Safety", tr: "Güvenlik", type: "Noun (İsim)" },
+            { eng: "Security", tr: "Güvenlik (asayiş)", type: "Noun (İsim)" },
+            { eng: "Efficiency", tr: "Verimlilik", type: "Noun (İsim)" },
+            { eng: "Productivity", tr: "Üretkenlik, verimlilik", type: "Noun (İsim)" },
+            { eng: "Success", tr: "Başarı", type: "Noun (İsim)" },
+            { eng: "Failure", tr: "Başarısızlık", type: "Noun (İsim)" },
+            { eng: "Progress", tr: "İlerleme, gelişim", type: "Noun (İsim)" },
+            { eng: "Advantage", tr: "Avantaj", type: "Noun (İsim)" },
+            { eng: "Disadvantage", tr: "Dezavantaj", type: "Noun (İsim)" },
+            { eng: "Solution", tr: "Çözüm", type: "Noun (İsim)" },
+            { eng: "Approach", tr: "Yaklaşım", type: "Noun (İsim)" },
+            { eng: "Perspective", tr: "Bakış açısı", type: "Noun (İsim)" },
+            { eng: "Relationship", tr: "İlişki", type: "Noun (İsim)" },
+            { eng: "Association", tr: "Dernek, ilişki/bağlantı", type: "Noun (İsim)" },
+            { eng: "Distribution", tr: "Dağılım, dağıtım", type: "Noun (İsim)" },
+            { eng: "Availability", tr: "Mevcudiyet, bulunabilirlik", type: "Noun (İsim)" },
+            { eng: "Accessibility", tr: "Erişilebilirlik", type: "Noun (İsim)" },
+            { eng: "Sensitivity", tr: "Hassasiyet, duyarlılık", type: "Noun (İsim)" }
+        ];
+
+        const card = document.getElementById('card');
+        const englishWordElem = document.getElementById('englishWord');
+        const turkishMeaningElem = document.getElementById('turkishMeaning');
+        const wordTypeElem = document.getElementById('wordType');
+
+        function flipCard() {
+            card.classList.toggle('flipped');
+        }
+
+        function nextWord(event) {
+            event.stopPropagation(); 
+            
+            if (card.classList.contains('flipped')) {
+                card.classList.remove('flipped');
+                setTimeout(setRandomWord, 250);
+            } else {
+                setRandomWord();
+            }
+        }
+
+        function setRandomWord() {
+            const randomIndex = Math.floor(Math.random() * wordPool.length);
+            const selectedWord = wordPool[randomIndex];
+            
+            wordTypeElem.innerText = selectedWord.type;
+            englishWordElem.innerText = selectedWord.eng;
+            turkishMeaningElem.innerText = selectedWord.tr;
+        }
+
+        window.onload = setRandomWord;
+    </script>
+</body>
+</html>
+
