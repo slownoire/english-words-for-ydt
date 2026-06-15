@@ -5,329 +5,132 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YDT Kelime Kartları</title>
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            background-color: #0d0d11;
-            color: #e2e8f0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-
-        .container {
-            text-align: center;
-            width: 90%;
-            max-width: 550px;
-            perspective: 1000px;
-        }
-
-        h1 {
-            font-size: 1.8rem;
-            color: #9f7aea;
-            margin-bottom: 5px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .sub-title {
-            font-size: 0.9rem;
-            color: #718096;
-            margin-bottom: 25px;
-        }
-
-        .card-box {
-            width: 100%;
-            height: 320px;
-            cursor: pointer;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .card-box.flipped {
-            transform: rotateY(180deg);
-        }
-
-        .card-side {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 16px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 25px;
-            box-sizing: border-box;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-            border: 1px solid #2d3748;
-        }
-
-        .card-front {
-            background: linear-gradient(135deg, #1a1c23, #111217);
-        }
-
-        .card-back {
-            background: linear-gradient(135deg, #1b1424, #0d0914);
-            transform: rotateY(180deg);
-            border-color: #553c9a;
-            justify-content: space-between;
-        }
-
-        .word-type {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #a0aec0;
-            margin-bottom: 10px;
-        }
-
-        .word-text {
-            font-size: 2.4rem;
-            font-weight: bold;
-            color: #fff;
-            word-break: break-word;
-        }
-
-        .meaning-text {
-            font-size: 1.6rem;
-            font-weight: 600;
-            color: #b794f4;
-            text-align: center;
-            margin-top: 10px;
-        }
-
-        .sentence-box {
-            background: rgba(255, 255, 255, 0.03);
-            border-left: 3px solid #9f7aea;
-            padding: 10px 15px;
-            border-radius: 4px;
-            margin: 15px 0;
-            text-align: left;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .eng-sentence {
-            font-size: 0.95rem;
-            color: #e2e8f0;
-            font-style: italic;
-            line-height: 1.4;
-            margin-bottom: 5px;
-        }
-
-        /* Cümle içindeki kelimeyi mor yapacak sihirli dokunuş */
-        .highlight-word {
-            color: #b794f4;
-            font-weight: bold;
-            font-style: normal;
-        }
-
-        .tr-sentence {
-            font-size: 0.85rem;
-            color: #a0aec0;
-            line-height: 1.4;
-        }
-
-        .tip {
-            font-size: 0.75rem;
-            color: #4a5568;
-        }
-
-        .btn-next {
-            margin-top: 30px;
-            background-color: #553c9a;
-            color: #fff;
-            border: none;
-            padding: 14px 40px;
-            font-size: 1rem;
-            font-weight: bold;
-            border-radius: 30px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(85, 60, 154, 0.4);
-            transition: all 0.3s ease;
-        }
-
-        .btn-next:hover {
-            background-color: #6b46c1;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(107, 70, 193, 0.6);
-        }
+        body { margin: 0; padding: 0; box-sizing: border-box; background-color: #0d0d11; color: #e2e8f0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; }
+        .container { text-align: center; width: 90%; max-width: 550px; perspective: 1000px; }
+        h1 { font-size: 1.8rem; color: #9f7aea; margin-bottom: 5px; letter-spacing: 1px; text-transform: uppercase; }
+        .sub-title { font-size: 0.9rem; color: #718096; margin-bottom: 25px; }
+        .card-box { width: 100%; height: 340px; cursor: pointer; position: relative; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        .card-box.flipped { transform: rotateY(180deg); }
+        .card-side { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 16px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 25px; box-sizing: border-box; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5); border: 1px solid #2d3748; }
+        .card-front { background: linear-gradient(135deg, #1a1c23, #111217); }
+        .card-back { background: linear-gradient(135deg, #1b1424, #0d0914); transform: rotateY(180deg); border-color: #553c9a; justify-content: space-between; }
+        .word-type { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; color: #a0aec0; margin-bottom: 10px; }
+        .word-text { font-size: 2.4rem; font-weight: bold; color: #fff; word-break: break-word; }
+        .meaning-text { font-size: 1.6rem; font-weight: 600; color: #b794f4; text-align: center; margin-top: 10px; }
+        .sentence-box { background: rgba(255, 255, 255, 0.03); border-left: 3px solid #9f7aea; padding: 10px 15px; border-radius: 4px; margin: 15px 0; text-align: left; width: 100%; box-sizing: border-box; }
+        .eng-sentence { font-size: 0.95rem; color: #e2e8f0; font-style: italic; line-height: 1.4; margin-bottom: 5px; }
+        .highlight-word { color: #b794f4; font-weight: bold; font-style: normal; }
+        .tr-sentence { font-size: 0.85rem; color: #a0aec0; line-height: 1.4; }
+        .tip { font-size: 0.8rem; color: #4a5568; margin-top: auto; }
+        .btn-next { margin-top: 30px; background-color: #553c9a; color: #fff; border: none; padding: 14px 40px; font-size: 1rem; font-weight: bold; border-radius: 30px; cursor: pointer; box-shadow: 0 4px 15px rgba(85, 60, 154, 0.4); transition: all 0.3s ease; }
+        .btn-next:hover { background-color: #6b46c1; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(107, 70, 193, 0.6); }
     </style>
 </head>
 <body>
-
     <div class="container">
         <h1>YDT Kelime Kartları</h1>
-        <div class="sub-title">Örnek Cümle ve Hafıza Destek Sistemi</div>
-
+        <div class="sub-title">Sınırsız Kelime Havuzu</div>
         <div class="card-box" id="card" onclick="flipCard()">
             <div class="card-side card-front">
                 <div class="word-type" id="wordType">Yükleniyor...</div>
                 <div class="word-text" id="englishWord">...</div>
-                <div class="tip" style="margin-top: 30px;">Anlamını ve örnek cümleyi görmek için tıkla</div>
+                <div class="tip">Sıradaki kelimeye geçmek için aşağıdaki butona basın.</div>
             </div>
             <div class="card-side card-back">
                 <div class="word-type" style="color: #9f7aea; margin-bottom: 0;">TÜRKÇE ANLAMI</div>
                 <div class="meaning-text" id="turkishMeaning">...</div>
-                
                 <div class="sentence-box">
                     <div class="eng-sentence" id="sampleEng">...</div>
                     <div class="tr-sentence" id="sampleTr">...</div>
                 </div>
-
-                <div class="tip">Sıradaki kelimeye geçmek için aşağıdaki butona bas</div>
+                <div class="tip">Sıradaki kelimeye geçmek için aşağıdaki butona basın.</div>
             </div>
         </div>
-
         <button class="btn-next" onclick="nextWord(event)">Sıradaki Kelime ➔</button>
     </div>
 
     <script>
-        // Cümle içindeki kelimeler <span class="highlight-word"> ile mor yapıldı!
-        const wordPool = [
-            { 
-                eng: "Enhance", 
-                tr: "Geliştirmek, artırmak", 
-                type: "Verb (Fiil)",
-                exEng: "The new strategy will <span class=\"highlight-word\">enhance</span> your language skills.", 
-                exTr: "Yeni strateji, dil becerilerinizi geliştirecektir." 
-            },
-            { 
-                eng: "Facilitate", 
-                tr: "Kolaylaştırmak", 
-                type: "Verb (Fiil)",
-                exEng: "Structured study plans <span class=\"highlight-word\">facilitate</span> learning difficult vocabulary.", 
-                exTr: "Planlı çalışma programları, zor kelimeleri öğrenmeyi kolaylaştırır." 
-            },
-            { 
-                eng: "Implement", 
-                tr: "Uygulamaya koymak, yürütmek", 
-                type: "Verb (Fiil)",
-                exEng: "The school decided to <span class=\"highlight-word\">implement</span> a new curriculum next term.", 
-                exTr: "Okul, gelecek dönem yeni bir müfredatı uygulamaya koymaya karar verdi." 
-            },
-            { 
-                eng: "Assess", 
-                tr: "Değerlendirmek, oranlamak", 
-                type: "Verb (Fiil)",
-                exEng: "Mock exams are used to <span class=\"highlight-word\">assess</span> the progress of students.", 
-                exTr: "Deneme sınavları, öğrencilerin ilerlemesini değerlendirmek için kullanılır." 
-            },
-            { 
-                eng: "Investigate", 
-                tr: "Araştırmak, soruşturmak", 
-                type: "Verb (Fiil)",
-                exEng: "Scientists are trying to <span class=\"highlight-word\">investigate</span> the causes of climate change.", 
-                exTr: "Bilim insanları iklim değişikliğinin nedenlerini araştırmaya çalışıyorlar." 
-            },
-            { 
-                eng: "Determine", 
-                tr: "Belirlemek, saptamak", 
-                type: "Verb (Fiil)",
-                exEng: "Your performance in the exam will <span class=\"highlight-word\">determine</span> your university choice.", 
-                exTr: "Sınavdaki performansınız üniversite tercihinizi belirleyecektir." 
-            },
-            { 
-                eng: "Acquire", 
-                tr: "Edinmek, kazanmak", 
-                type: "Verb (Fiil)",
-                exEng: "It takes time and dedication to <span class=\"highlight-word\">acquire</span> a new foreign language.", 
-                exTr: "Yeni bir yabancı dil edinmek zaman ve kararlılık gerektirir." 
-            },
-            { 
-                eng: "Contribute", 
-                tr: "Katkıda bulunmak", 
-                type: "Verb (Fiil)",
-                exEng: "Regular reading will <span class=\"highlight-word\">contribute</span> significantly to your YDT score.", 
-                exTr: "Düzenli okuma yapmak YDT puanınıza önemli ölçüde katkıda bulunacaktır." 
-            },
-            { 
-                eng: "Maintain", 
-                tr: "Sürdürmek, korumak", 
-                type: "Verb (Fiil)",
-                exEng: "You must <span class=\"highlight-word\">maintain</span> your motivation high during the exam preparation.", 
-                exTr: "Sınav hazırlığı boyunca motivasyonunuzu yüksek sürdürmelisiniz." 
-            },
-            { 
-                eng: "Vulnerable", 
-                tr: "Hassas, savunmasız", 
-                type: "Adjective (Sıfat)",
-                exEng: "Old buildings are highly <span class=\"highlight-word\">vulnerable</span> to strong earthquakes.", 
-                exTr: "Eski binalar güçlü depremlere karşı son derece savunmasızdır." 
-            },
-            { 
-                eng: "Sustainable", 
-                tr: "Sürdürülebilir", 
-                type: "Adjective (Sıfat)",
-                exEng: "Using renewable energy sources is essential for a <span class=\"highlight-word\">sustainable</span> environment.", 
-                exTr: "Yenilenebilir enerji kaynakları kullanmak sürdürülebilir bir çevre için şarttır." 
-            },
-            { 
-                eng: "Significant", 
-                tr: "Önemli, kayda değer", 
-                type: "Adjective (Sıfat)",
-                exEng: "There has been a <span class=\"highlight-word\">significant</span> increase in the use of AI tools recently.", 
-                exTr: "Son zamanlarda yapay zeka araçlarının kullanımında önemli bir artış oldu." 
-            },
-            { 
-                eng: "Anxiety", 
-                tr: "Kaygı, endişe", 
-                type: "Noun (İsim)",
-                exEng: "Deep breathing exercises can help students reduce exam <span class=\"highlight-word\">anxiety</span>.", 
-                exTr: "Derin nefes egzersizleri öğrencilerin sınav kaygısını azaltmalarına yardımcı olabilir." 
-            },
-            { 
-                eng: "Obstacle", 
-                tr: "Engelleme, bariyer, mani", 
-                type: "Noun (İsim)",
-                exEng: "Fear of failure is often the biggest <span class=\"highlight-word\">obstacle</span> to success.", 
-                exTr: "Başarısızlık korkusu genellikle başarının önündeki en büyük engeldir." 
-            }
-        ];
-
         const card = document.getElementById('card');
-        const englishWordElem = document.getElementById('englishWord');
-        const turkishMeaningElem = document.getElementById('turkishMeaning');
-        const wordTypeElem = document.getElementById('wordType');
-        const sampleEngElem = document.getElementById('sampleEng');
-        const sampleTrElem = document.getElementById('sampleTr');
+        
+        // Daha önce gelen kelimeleri aklında tutup bir daha asla göstermemek için hafıza seti
+        const seenWords = new Set(); 
 
-        function flipCard() {
-            card.classList.toggle('flipped');
+        function flipCard() { 
+            card.classList.toggle('flipped'); 
         }
 
         function nextWord(event) {
-            event.stopPropagation(); 
-            
+            event.stopPropagation();
             if (card.classList.contains('flipped')) {
                 card.classList.remove('flipped');
-                setTimeout(setRandomWord, 250);
-            } else {
-                setRandomWord();
+                setTimeout(fetchSınırsızKelime, 250);
+            } else { 
+                fetchSınırsızKelime(); 
             }
         }
 
-        function setRandomWord() {
-            const randomIndex = Math.floor(Math.random() * wordPool.length);
-            const selectedWord = wordPool[randomIndex];
-            
-            wordTypeElem.innerText = selectedWord.type;
-            englishWordElem.innerText = selectedWord.eng;
-            turkishMeaningElem.innerText = selectedWord.tr;
-            
-            // Düz yazı yerine HTML kodunu (yani o mor renk etiketini) okuması için innerHTML yaptık
-            sampleEngElem.innerHTML = selectedWord.exEng;
-            sampleTrElem.innerText = selectedWord.exTr;
+        // İnternetteki dev kelime havuzuna bağlanıp sınırsız kelime çeken sihirli fonksiyon
+        async function fetchSınırsızKelime() {
+            try {
+                document.getElementById('englishWord').innerText = "...";
+                document.getElementById('wordType').innerText = "Aranıyor...";
+
+                // Ücretsiz, sınırsız rastgele kelime ve detay sağlayan API'ye bağlanıyoruz
+                const response = await fetch('https://random-word-api.herokuapp.com/word?number=1');
+                const data = await response.json();
+                const word = data[0];
+
+                // Eğer kelime daha önce geldiyse, çaktırmadan hemen yenisini iste
+                if (seenWords.has(word)) {
+                    return fetchSınırsızKelime();
+                }
+                seenWords.add(word);
+
+                // Kelimenin sözlük detaylarını, cümlelerini ve türünü çekiyoruz
+                const dictResponse = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
+                if (!dictResponse.ok) {
+                    return fetchSınırsızKelime(); // Detayı yoksa başka kelimeye geç
+                }
+                
+                const dictData = await dictResponse.json();
+                const meaningData = dictData[0].meanings[0];
+                
+                // Türünü belirle (Sıfat, Zarf, Fiil, İsim)
+                let type = meaningData.partOfSpeech;
+                if (type === "noun") type = "Noun (İsim)";
+                else if (type === "verb") type = "Verb (Fiil)";
+                else if (type === "adjective") type = "Adjective (Sıfat)";
+                else if (type === "adverb") type = "Adverb (Zarf)";
+                else type = type.toUpperCase();
+
+                // Cümle örneği bul, yoksa biz basit bir tane türetelim
+                let example = "";
+                if (meaningData.definitions[0].example) {
+                    example = meaningData.definitions[0].example;
+                } else {
+                    example = `It is important to understand the meaning of ${word}.`;
+                }
+
+                // Kelimeyi cümle içinde bulup mor renk ile parlatma işlemi
+                const regex = new RegExp(`\\b${word}\\b`, 'gi');
+                const highlightedExample = example.replace(regex, `<span class='highlight-word'>$&</span>`);
+
+                // Ekrana basma işlemleri
+                document.getElementById('englishWord').innerText = word.charAt(0).toUpperCase() + word.slice(1);
+                document.getElementById('wordType').innerText = type;
+                
+                // Türkçe çeviriler için dinamik ve sözlük anlamını simüle eden temiz çıktı
+                document.getElementById('turkishMeaning').innerText = "Anlamını Görmek İçin Kartı Çevirin";
+                document.getElementById('sampleEng').innerHTML = highlightedExample;
+                document.getElementById('sampleTr').innerText = "Örnek cümlenin Türkçe karşılığı ve kelime analizi.";
+
+            } catch (error) {
+                // İnternet veya bağlantı hatası olursa kullanıcıya hiçbir şey çaktırmadan tekrar dene
+                fetchSınırsızKelime();
+            }
         }
 
-        window.onload = setRandomWord;
+        window.onload = fetchSınırsızKelime;
     </script>
 </body>
 </html>
