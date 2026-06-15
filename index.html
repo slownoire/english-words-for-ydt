@@ -34,18 +34,20 @@
         <div class="sub-title">Study Zone</div>
         
         <div class="card-box" id="card" onclick="flipCard()">
+            <!-- KART ÖN YÜZÜ -->
             <div class="card-side card-front">
-                <div class="word-type" id="wordType">Loading...</div>
+                <div class="word-type" id="wordType">ONLINE LEVEL</div>
                 <div class="word-text-container">
-                    <div class="word-text" id="englishWord">...</div>
+                    <div class="word-text" id="englishWord">Loading...</div>
                 </div>
                 <div class="tip">Sıradaki kelimeye geçmek için aşağıdaki butona basın.</div>
             </div>
             
+            <!-- KART ARKA YÜZÜ -->
             <div class="card-side card-back">
                 <div class="word-type" style="color: #9f7aea;">Meaning & Example</div>
                 <div class="word-text-container">
-                    <div class="meaning-text" id="turkishMeaning">...</div>
+                    <div class="meaning-text" id="turkishMeaning">Translating...</div>
                     <div class="sentence-box">
                         <div class="eng-sentence" id="sampleEng">...</div>
                         <div class="tr-sentence" id="sampleTr">...</div>
@@ -59,80 +61,8 @@
     </div>
 
     <script>
-        // Gerçek Anlamda Sınırsız Döngü Sağlayan Genişletilmiş YDT Kelime Havuzu
-        const wordPool = [
-            { eng: "Barren", tr: "Kurak, verimsiz", type: "Adjective", exEng: "Nothing could grow in this <span class='highlight-word'>barren</span> soil.", exTr: "Bu verimsiz toprakta hiçbir şey büyüyemezdi." },
-            { eng: "Enhance", tr: "Geliştirmek, artırmak", type: "Verb", exEng: "The new strategy will <span class='highlight-word'>enhance</span> your language skills.", exTr: "Yeni strateji dil becerilerinizi geliştirecektir." },
-            { eng: "Facilitate", tr: "Kolaylaştırmak", type: "Verb", exEng: "Good planning can <span class='highlight-word'>facilitate</span> the entire process.", exTr: "İyi bir planlama tüm süreci kolaylaştırabilir." },
-            { eng: "Implement", tr: "Uygulamaya koymak", type: "Verb", exEng: "The school will <span class='highlight-word'>implement</span> new rules next term.", exTr: "Okul önümüzdeki dönem yeni kuralları uygulamaya koyacak." },
-            { eng: "Assess", tr: "Değerlendirmek", type: "Verb", exEng: "We need to <span class='highlight-word'>assess</span> the risks before making a choice.", exTr: "Bir seçim yapmadan önce riskleri değerlendirmemiz gerekiyor." },
-            { eng: "Acquire", tr: "Edinmek, kazanmak", type: "Verb", exEng: "She managed to <span class='highlight-word'>acquire</span> a reputation as a fine writer.", exTr: "İyi bir yazar olarak ün kazanmayı başardı." },
-            { eng: "Determine", tr: "Belirlemek, saptamak", type: "Verb", exEng: "Your hard work will <span class='highlight-word'>determine</span> your future success.", exTr: "Sıkı çalışmanız gelecekteki başarınızı belirleyecektir." },
-            { eng: "Vulnerable", tr: "Hassas, savunmasız", type: "Adjective", exEng: "The ecosystem is highly <span class='highlight-word'>vulnerable</span> to climate change.", exTr: "Ekosistem iklim değişikliğine karşı son derece savunmasızdır." },
-            { eng: "Sustainable", tr: "Sürdürülebilir", type: "Adjective", exEng: "We need to find <span class='highlight-word'>sustainable</span> energy sources.", exTr: "Sürdürülebilir enerji kaynakları bulmamız gerekiyor." },
-            { eng: "Significant", tr: "Önemli, kayda değer", type: "Adjective", exEng: "There has been a <span class='highlight-word'>significant</span> increase in sales.", exTr: "Satışlarda kayda değer bir artış oldu." },
-            { eng: "Abandon", tr: "Terk etmek, bırakmak", type: "Verb", exEng: "The sailors had to <span class='highlight-word'>abandon</span> the sinking ship.", exTr: "Denizciler batan gemiyi terk etmek zorunda kaldı." },
-            { eng: "Abolish", tr: "Yürürlükten kaldırmak", type: "Verb", exEng: "Some countries decided to <span class='highlight-word'>abolish</span> old laws.", exTr: "Bazı ülkeler eski yasaları kaldırmaya karar verdi." },
-            { eng: "Accurate", tr: "Doğru, kesin", type: "Adjective", exEng: "The clock is highly <span class='highlight-word'>accurate</span> and never loses time.", exTr: "Saat son derece doğrudur ve asla geri kalmaz." },
-            { eng: "Ambiguous", tr: "Belirsiz, muğlak", type: "Adjective", exEng: "His explanation was too <span class='highlight-word'>ambiguous</span> to understand.", exTr: "Açıklaması anlaşılmayacak kadar belirsizdi." },
-            { eng: "Compulsory", tr: "Zorunlu, mecburi", type: "Adjective", exEng: "Wearing a helmet is <span class='highlight-word'>compulsory</span> while riding a bike.", exTr: "Bisiklet sürerken kask takmak zorunludur." },
-            { eng: "Crucial", tr: "Çok önemli, kritik", type: "Adjective", exEng: "Vitamin C plays a <span class='highlight-word'>crucial</span> role in our health.", exTr: "C vitamini sağlığımızda kritik bir rol oynar." },
-            { eng: "Decline", tr: "Azalmak, reddetmek", type: "Verb", exEng: "The population of the village began to <span class='highlight-word'>decline</span>.", exTr: "Köyün nüfusu azalmaya başladı." },
-            { eng: "Drastic", tr: "Şiddetli, ani, radikal", type: "Adjective", exEng: "The company took <span class='highlight-word'>drastic</span> measures to cut costs.", exTr: "Şirket maliyetleri kısmak için radikal önlemler aldı." },
-            { eng: "Emphasize", tr: "Vurgulamak", type: "Verb", exEng: "The coach wanted to <span class='highlight-word'>emphasize</span> the importance of teamwork.", exTr: "Antrenör takım çalışmasının önemini vurgulamak istedi." },
-            { eng: "Fluctuate", tr: "Dalgalanmak, değişip durmak", type: "Verb", exEng: "The temperature will <span class='highlight-word'>fluctuate</span> throughout the week.", exTr: "Sıcaklık hafta boyunca dalgalanacak." },
-            { eng: "Hostile", tr: "Düşmanca, saldırgan", type: "Adjective", exEng: "The crowd became <span class='highlight-word'>hostile</span> when the concert was delayed.", exTr: "Konser gecikince kalabalık düşmanca bir tavır takındı." },
-            { eng: "Inevitable", tr: "Kaçınılmaz", type: "Adjective", exEng: "Growing older is an <span class='highlight-word'>inevitable</span> part of life.", exTr: "Yaşlanmak hayatın kaçınılmaz bir parçasıdır." },
-            { eng: "Mutual", tr: "Karşılıklı, ortak", type: "Adjective", exEng: "They parted ways by <span class='highlight-word'>mutual</span> agreement.", exTr: "Karşılıklı anlaşma yoluyla yollarını ayırdılar." },
-            { eng: "Precious", tr: "Değerli, kıymetli", type: "Adjective", exEng: "Gold is a <span class='highlight-word'>precious</span> metal used for centuries.", exTr: "Altın, yüzyıllardır kullanılan değerli bir metaldir." },
-            { eng: "Reluctant", tr: "İsteksiz, gönülsüz", type: "Adjective", exEng: "He was <span class='highlight-word'>reluctant</span> to talk about his past.", exTr: "Geçmişi hakkında konuşmaya isteksizdi." },
-            { eng: "Sufficient", tr: "Yeterli, kafi", type: "Adjective", exEng: "We have <span class='highlight-word'>sufficient</span> food to last for a week.", exTr: "Bir hafta yetecek kadar yeterli yiyeceğimiz var." },
-            { eng: "Adversely", tr: "Olumsuz yönde", type: "Adverb", exEng: "The economy was <span class='highlight-word'>adversely</span> affected by the crisis.", exTr: "Ekonomi krizden olumsuz yönde etkilendi." },
-            { eng: "Profoundly", tr: "Derinden, tamamen", type: "Adverb", exEng: "Her words <span class='highlight-word'>profoundly</span> touched everyone in the room.", exTr: "Sözleri odadaki herkesi derinden etkiledi." },
-            { eng: "Abundant", tr: "Bol, bereketli", type: "Adjective", exEng: "The country has <span class='highlight-word'>abundant</span> oil reserves.", exTr: "Ülkenin bol petrol rezervleri var." },
-            { eng: "Accidentally", tr: "Kazara, tesadüfen", type: "Adverb", exEng: "I <span class='highlight-word'>accidentally</span> dropped my phone on the floor.", exTr: "Telefonumu kazara yere düşürdüm." },
-            { eng: "Accomplish", tr: "Başarmak, tamamlamak", type: "Verb", exEng: "You can <span class='highlight-word'>accomplish</span> anything with enough effort.", exTr: "Yeterli çaba ile her şeyi başarabilirsin." },
-            { eng: "Accumulate", tr: "Biriktirmek, toplamak", type: "Verb", exEng: "Snow began to <span class='highlight-word'>accumulate</span> on the mountain tops.", exTr: "Dağ tepelerinde kar birikmeye başladı." },
-            { eng: "Baffle", tr: "Şaşırtmak, aklını karıştırmak", type: "Verb", exEng: "The detective was completely <span class='highlight-word'>baffle</span>d by the case.", exTr: "Dedektif vaka karşısında tamamen şaşkına dönmüştü." },
-            { eng: "Cautious", tr: "Tedbirli, dikkatli", type: "Adjective", exEng: "You should be <span class='highlight-word'>cautious</span> when revealing secrets.", exTr: "Sırları açıklarken tedbirli olmalısınız." },
-            { eng: "Cherish", tr: "Değer vermek, korumak", type: "Verb", exEng: "We should <span class='highlight-word'>cherry</span> every moment we spend together.", exTr: "Birlikte geçirdiğimiz her anın değerini bilmeliyiz." },
-            { eng: "Deliberately", tr: "Kasten, bilerek", type: "Adverb", exEng: "He <span class='highlight-word'>deliberately</span> broke the rules to get attention.", exTr: "Dikkat çekmek için kuralları kasten çiğnedi." },
-            { eng: "Devastate", tr: "Tahrip etmek, yıkmak", type: "Verb", exEng: "The flood managed to <span class='highlight-word'>devastate</span> the crop fields.", exTr: "Sel, ekin tarlalarını mahvetmeyi başardı." },
-            { eng: "Eager", tr: "Hevesli, istekli", type: "Adjective", exEng: "The children were <span class='highlight-word'>eager</span> to open their gifts.", exTr: "Çocuklar hediyelerini açmaya hevesliydi." },
-            { eng: "Elaborate", tr: "Detaylı, ayrıntılı", type: "Adjective", exEng: "They built an <span class='highlight-word'>elaborate</span> trap to catch the thief.", exTr: "Hırsızı yakalamak için ayrıntılı bir tuzak kurdular." },
-            { eng: "Fatal", tr: "Ölümcül, vahim", type: "Adjective", exEng: "The mistake proved to be <span class='highlight-word'>fatal</span> for the project.", exTr: "Hata, proje için ölümcül oldu." },
-            { eng: "Feasible", tr: "Yapılabilir, olası", type: "Adjective", exEng: "It is a <span class='highlight-word'>feasible</span> plan that saves a lot of time.", exTr: "Çok fazla zaman kazandıran yapılabilir bir plan." },
-            { eng: "Genuine", tr: "Gerçek, hakiki", type: "Adjective", exEng: "I could see a <span class='highlight-word'>genuine</span> smile on her face.", exTr: "Yüzünde gerçek bir gülümseme görebiliyordum." },
-            { eng: "Hinder", tr: "Engellemek, aksatmak", type: "Verb", exEng: "The heavy snow will <span class='highlight-word'>hinder</span> traffic flow.", exTr: "Yoğun kar yağışı trafik akışını engelleyecek." },
-            { eng: "Illusion", tr: "Yanılsama, illüzyon", type: "Noun", exEng: "The magician created a perfect <span class='highlight-word'>illusion</span> of flying.", exTr: "Sihirbaz mükemmel bir uçma illüzyonu yarattı." },
-            { eng: "Indifferent", tr: "Kayıtsız, ilgisiz", type: "Adjective", exEng: "He was <span class='highlight-word'>indifferent</span> to the needs of others.", exTr: "Başkalarının ihtiyaçlarına karşı kayıtsızdı." },
-            { eng: "Justify", tr: "Haklı çıkarmak", type: "Verb", exEng: "Nothing can <span class='highlight-word'>justify</span> such violent acts.", exTr: "Hiçbir şey bu tür şiddet eylemlerini haklı çıkaramaz." },
-            { eng: "Neglect", tr: "İhmal etmek", type: "Verb", exEng: "Never <span class='highlight-word'>neglect</span> your duties as a student.", exTr: "Bir öğrenci olarak görevlerinizi asla ihmal etmeyin." },
-            { eng: "Obscure", tr: "Belirsiz, gizlemek", type: "Adjective", exEng: "The view was <span class='highlight-word'>obscure</span>d by thick fog.", exTr: "Görüş yoğun sis nedeniyle belirsizleşmişti." },
-            { eng: "Paradox", tr: "Çelişki, paradoks", type: "Noun", exEng: "It's a strange <span class='highlight-word'>paradox</span> that the richest man is unhappy.", exTr: "En zengin adamın mutsuz olması garip bir çelişkidir." },
-            { eng: "Radically", tr: "Kökten, tamamen", type: "Adverb", exEng: "The village has <span class='highlight-word'>radically</span> changed over the years.", exTr: "Köy, yıllar içinde kökten değişti." },
-            { eng: "Scarcity", tr: "Kıtlık, azlık", type: "Noun", exEng: "The <span class='highlight-word'>scarcity</span> of resources led to a great conflict.", exTr: "Kaynakların azlığı büyük bir çatışmaya yol açtı." },
-            { eng: "Tangible", tr: "Somut, elle tutulur", type: "Adjective", exEng: "The police have no <span class='highlight-word'>tangible</span> proof against him.", exTr: "Polisin elinde ona karşı somut bir kanıt yok." },
-            { eng: "Unprecedented", tr: "Eşi benzeri görülmemiş", type: "Adjective", exEng: "The event attracted an <span class='highlight-word'>unprecedented</span> number of people.", exTr: "Etkinlik, eşi benzeri görülmemiş sayıda insanı çekti." },
-            { eng: "Vaguely", tr: "Belirsizce, hayal meyal", type: "Adverb", exEng: "I <span class='highlight-word'>vaguely</span> remember the house we lived in as kids.", exTr: "Çocukken yaşadığımız evi hayal meyal hatırlıyorum." },
-            { eng: "Withstand", tr: "Karşı koymak, dayanmak", type: "Verb", exEng: "These trees can <span class='highlight-word'>withstand</span> severe winter storms.", exTr: "Bu ağaçlar şiddetli kış fırtınalarına dayanabilir." },
-            { eng: "Yield", tr: "Ürün vermek, sağlamak", type: "Verb", exEng: "The investment will <span class='highlight-word'>yield</span> high profits in the future.", exTr: "Yatırım gelecekte yüksek karlar sağlayacaktır." }
-        ];
-
-        let activeQueue = [];
         const card = document.getElementById('card');
-
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
-
-        function regenerateQueue() {
-            activeQueue = shuffleArray([...wordPool]);
-        }
+        let currentWord = "";
 
         function flipCard() { 
             card.classList.toggle('flipped'); 
@@ -142,31 +72,84 @@
             event.stopPropagation();
             if (card.classList.contains('flipped')) {
                 card.classList.remove('flipped');
-                setTimeout(setNextWord, 250);
+                setTimeout(fetchOnlineWord, 250);
             } else { 
-                setNextWord(); 
+                fetchOnlineWord(); 
             }
         }
 
-        function setNextWord() {
-            if (activeQueue.length === 0) {
-                regenerateQueue();
+        // İnternetten tamamen rastgele ve sınırsız İngilizce kelime çeken fonksiyon
+        async function fetchOnlineWord() {
+            document.getElementById('englishWord').innerText = "Searching...";
+            document.getElementById('wordType').innerText = "FETCHING...";
+            document.getElementById('turkishMeaning').innerText = "Translating...";
+            document.getElementById('sampleEng').innerText = "...";
+            document.getElementById('sampleTr').innerText = "...";
+
+            try {
+                // 1. Adım: Tamamen ücretsiz, sınırsız rastgele kelime üreteci API'si
+                const wordResponse = await fetch('https://random-word-api.herokuapp.com/word?number=1');
+                const wordArray = await wordResponse.json();
+                currentWord = wordArray[0];
+                
+                // Baş harfini büyütelim
+                const formattedWord = currentWord.charAt(0).toUpperCase() + currentWord.slice(1);
+                document.getElementById('englishWord').innerText = formattedWord;
+
+                // 2. Adım: Kelimenin türünü ve örnek cümlesini Dictionary API'den çekelim
+                const dictResponse = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${currentWord}`);
+                
+                let partOfSpeech = "Vocabulary";
+                let exampleSentence = `The study of the word "${currentWord}" is valuable for language exams.`;
+
+                if (dictResponse.ok) {
+                    const dictData = await dictResponse.json();
+                    if (dictData[0] && dictData[0].meanings[0]) {
+                        partOfSpeech = dictData[0].meanings[0].partOfSpeech.toUpperCase();
+                        const definition = dictData[0].meanings[0].definitions[0];
+                        if (definition && definition.example) {
+                            exampleSentence = definition.example;
+                        }
+                    }
+                }
+                document.getElementById('wordType').innerText = partOfSpeech;
+
+                // Kelimeyi örnek cümle içinde mor renkle parlatalım
+                const regex = new RegExp(`\\b${currentWord}\\b`, 'gi');
+                const highlightedSentence = exampleSentence.replace(regex, `<span class='highlight-word'>$&</span>`);
+                document.getElementById('sampleEng').innerHTML = highlightedSentence;
+
+                // 3. Adım: Kelimenin ve Cümlenin Türkçe karşılığını ücretsiz MyMemory API ile canlı çevirelim
+                // Kelime çevirisi
+                const translateWordUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(currentWord)}&langpair=en|tr`;
+                const trWordResponse = await fetch(translateWordUrl);
+                const trWordData = await trWordResponse.json();
+                let turkishMeaning = trWordData.responseData.translatedText;
+                
+                // Eğer sistem kelimeyi birebir çeviremediyse temizleyelim
+                if(turkishMeaning.toLowerCase() === currentWord.toLowerCase()) {
+                    turkishMeaning = "Genel Akademik Kelime";
+                }
+                document.getElementById('turkishMeaning').innerText = turkishMeaning;
+
+                // Cümle çevirisi
+                const translateSentenceUrl = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(exampleSentence)}&langpair=en|tr`;
+                const trSentResponse = await fetch(translateSentenceUrl);
+                const trSentData = await trSentResponse.json();
+                document.getElementById('sampleTr').innerText = trSentData.responseData.translatedText;
+
+            } catch (error) {
+                // İnternet anlık koparsa veya API yorulursa sistem çökmesin diye güvenli hata yönetimi
+                document.getElementById('englishWord').innerText = "Connection Alert";
+                document.getElementById('wordType').innerText = "ERROR";
+                document.getElementById('turkishMeaning').innerText = "Lütfen tekrar deneyin.";
+                document.getElementById('sampleEng').innerText = "An error occurred while fetching online data.";
+                document.getElementById('sampleTr').innerText = "İnternet bağlantınızı kontrol edip sıradaki kelimeye basın.";
             }
-            
-            const selectedWord = activeQueue.shift();
-            
-            document.getElementById('wordType').innerText = selectedWord.type;
-            document.getElementById('englishWord').innerText = selectedWord.eng;
-            document.getElementById('turkishMeaning').innerText = selectedWord.tr;
-            document.getElementById('sampleEng').innerHTML = selectedWord.exEng;
-            document.getElementById('sampleTr').innerText = selectedWord.exTr;
         }
 
-        window.onload = function() {
-            regenerateQueue();
-            setNextWord();
-        };
+        // Sayfa ilk yüklendiğinde bir tane kelime getirsin
+        window.onload = fetchOnlineWord;
     </script>
 </body>
 </html>
-
